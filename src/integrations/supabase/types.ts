@@ -14,16 +14,180 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_history: {
+        Row: {
+          changed_by: string
+          created_at: string
+          id: string
+          new_status: Database["public"]["Enums"]["order_status"]
+          notes: string | null
+          old_status: Database["public"]["Enums"]["order_status"] | null
+          order_id: string
+        }
+        Insert: {
+          changed_by: string
+          created_at?: string
+          id?: string
+          new_status: Database["public"]["Enums"]["order_status"]
+          notes?: string | null
+          old_status?: Database["public"]["Enums"]["order_status"] | null
+          order_id: string
+        }
+        Update: {
+          changed_by?: string
+          created_at?: string
+          id?: string
+          new_status?: Database["public"]["Enums"]["order_status"]
+          notes?: string | null
+          old_status?: Database["public"]["Enums"]["order_status"] | null
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_history_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          assigned_operator_id: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          exchange_rate: number
+          id: string
+          notes: string | null
+          order_number: string
+          product_name: string
+          product_price_usd: number
+          product_url: string
+          service_fee_percentage: number
+          status: Database["public"]["Enums"]["order_status"]
+          total_kwanza: number
+          tracking_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_operator_id?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          exchange_rate?: number
+          id?: string
+          notes?: string | null
+          order_number: string
+          product_name: string
+          product_price_usd: number
+          product_url: string
+          service_fee_percentage?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          total_kwanza: number
+          tracking_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_operator_id?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          exchange_rate?: number
+          id?: string
+          notes?: string | null
+          order_number?: string
+          product_name?: string
+          product_price_usd?: number
+          product_url?: string
+          service_fee_percentage?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          total_kwanza?: number
+          tracking_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "operator" | "financial"
+      order_status:
+        | "pending_payment"
+        | "payment_confirmed"
+        | "purchasing"
+        | "shipped_international"
+        | "in_customs"
+        | "shipped_local"
+        | "delivered"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +314,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "operator", "financial"],
+      order_status: [
+        "pending_payment",
+        "payment_confirmed",
+        "purchasing",
+        "shipped_international",
+        "in_customs",
+        "shipped_local",
+        "delivered",
+        "cancelled",
+      ],
+    },
   },
 } as const
