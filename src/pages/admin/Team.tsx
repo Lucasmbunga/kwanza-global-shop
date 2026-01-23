@@ -179,15 +179,16 @@ export default function Team() {
                   <SelectValue placeholder="Selecione um usuário" />
                 </SelectTrigger>
                 <SelectContent>
-                  {getAvailableUsers().map(profile => (
-                    <SelectItem key={profile.user_id} value={profile.user_id}>
-                      {profile.full_name} ({profile.email})
-                    </SelectItem>
-                  ))}
-                  {getAvailableUsers().length === 0 && (
-                    <SelectItem value="" disabled>
+                  {getAvailableUsers().length > 0 ? (
+                    getAvailableUsers().map(profile => (
+                      <SelectItem key={profile.user_id} value={profile.user_id}>
+                        {profile.full_name} ({profile.email})
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-2 py-4 text-sm text-muted-foreground text-center">
                       Nenhum usuário sem função
-                    </SelectItem>
+                    </div>
                   )}
                 </SelectContent>
               </Select>
