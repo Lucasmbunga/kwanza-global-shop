@@ -24,7 +24,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
-import { Loader2, UserPlus, Trash2, Shield, ShieldCheck, Wallet } from 'lucide-react';
+import { Loader2, UserPlus, Trash2, Shield, ShieldCheck, Wallet, Mail } from 'lucide-react';
 
 type AppRole = 'admin' | 'operator' | 'financial';
 
@@ -53,6 +53,12 @@ export default function Team() {
   const queryClient = useQueryClient();
   const [selectedUserId, setSelectedUserId] = useState<string>('');
   const [selectedRole, setSelectedRole] = useState<AppRole>('operator');
+  
+  // Invite user state
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteName, setInviteName] = useState('');
+  const [inviteRole, setInviteRole] = useState<AppRole>('operator');
+  const [isInviting, setIsInviting] = useState(false);
 
   // Fetch all profiles
   const { data: profiles, isLoading: profilesLoading } = useQuery({
@@ -136,6 +142,71 @@ export default function Team() {
       .slice(0, 2);
   };
 
+  const handleInviteUser = async () => {
+    if (!inviteEmail || !inviteName) {
+      toast.error('Preencha o email e nome do usuário');
+      return;
+    }
+
+    setIsInviting(true);
+    
+    try {
+      // Create user account with a temporary password
+      const tempPassword = crypto.randomUUID();
+      
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: inviteEmail,
+        password: tempPassword,
+        options: {
+          emailRedirectTo: window.location.origin + '/admin/login',
+          data: { full_name: inviteName }
+        }
+      });
+
+      if (signUpError) throw signUpError;
+
+      if (signUpData.user) {
+        // Create profile
+        const { error: profileError } = await supabase.from('profiles').insert({
+          user_id: signUpData.user.id,
+          full_name: inviteName,
+          email: inviteEmail
+        });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+        }
+
+        // Assign role
+        const { error: roleError } = await supabase.from('user_roles').insert({
+          user_id: signUpData.user.id,
+          role: inviteRole
+        });
+
+        if (roleError) {
+          console.error('Role assignment error:', roleError);
+        }
+
+        // Send password reset email so user can set their own password
+        await supabase.auth.resetPasswordForEmail(inviteEmail, {
+          redirectTo: window.location.origin + '/admin/reset-password',
+        });
+
+        queryClient.invalidateQueries({ queryKey: ['profiles'] });
+        queryClient.invalidateQueries({ queryKey: ['user-roles'] });
+        
+        toast.success(`Convite enviado para ${inviteEmail}! O usuário receberá um email para definir sua senha.`);
+        setInviteEmail('');
+        setInviteName('');
+        setInviteRole('operator');
+      }
+    } catch (error: any) {
+      toast.error('Erro ao convidar usuário: ' + error.message);
+    }
+    
+    setIsInviting(false);
+  };
+
   if (!hasRole('admin')) {
     return (
       <div className="text-center py-12">
@@ -158,6 +229,66 @@ export default function Team() {
           Gerencie os membros da equipe e suas funções
         </p>
       </div>
+
+      {/* Invite New User Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Mail className="h-5 w-5" />
+            Convidar Novo Usuário
+          </CardTitle>
+          <CardDescription>
+            Envie um convite por email para adicionar um novo membro à equipe
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="space-y-2">
+              <Label htmlFor="invite-name">Nome Completo</Label>
+              <Input
+                id="invite-name"
+                placeholder="Nome do usuário"
+                value={inviteName}
+                onChange={(e) => setInviteName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="invite-email">Email</Label>
+              <Input
+                id="invite-email"
+                type="email"
+                placeholder="email@exemplo.com"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Função</Label>
+              <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as AppRole)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="admin">Administrador</SelectItem>
+                  <SelectItem value="operator">Operador</SelectItem>
+                  <SelectItem value="financial">Financeiro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end">
+              <Button 
+                onClick={handleInviteUser}
+                disabled={isInviting || !inviteEmail || !inviteName}
+                className="w-full"
+              >
+                {isInviting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                <Mail className="h-4 w-4 mr-2" />
+                Enviar Convite
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Add Role Card */}
       <Card>
