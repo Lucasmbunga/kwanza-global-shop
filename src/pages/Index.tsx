@@ -6,6 +6,7 @@ import StoresSection from "@/components/StoresSection";
 import Calculator from "@/components/Calculator";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
         <CTASection />
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   );
 };

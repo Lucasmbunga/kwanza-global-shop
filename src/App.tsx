@@ -16,6 +16,7 @@ import Customers from "./pages/admin/Customers";
 import Reports from "./pages/admin/Reports";
 import Team from "./pages/admin/Team";
 import Settings from "./pages/admin/Settings";
+import Support from "./pages/admin/Support";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/admin/reports" element={<AdminLayout><Reports /></AdminLayout>} />
             <Route path="/admin/team" element={<AdminLayout><Team /></AdminLayout>} />
             <Route path="/admin/settings" element={<AdminLayout><Settings /></AdminLayout>} />
+            <Route path="/admin/support" element={<AdminLayout><Support /></AdminLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
