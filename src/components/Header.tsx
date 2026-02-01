@@ -41,9 +41,11 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" className="text-muted-foreground hover:text-gold">
-              Entrar
-            </Button>
+            <a href="/portal/login">
+              <Button variant="ghost" className="text-muted-foreground hover:text-gold">
+                Minha Conta
+              </Button>
+            </a>
             <Button variant="hero" size="lg">
               Começar Agora
             </Button>
@@ -80,9 +82,11 @@ const Header = () => {
                 Calculadora
               </a>
               <div className="flex flex-col gap-2 pt-4">
-                <Button variant="ghost" className="justify-start text-muted-foreground">
-                  Entrar
-                </Button>
+                <a href="/portal/login">
+                  <Button variant="ghost" className="w-full justify-start text-muted-foreground">
+                    Minha Conta
+                  </Button>
+                </a>
                 <Button variant="hero">
                   Começar Agora
                 </Button>
