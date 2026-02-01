@@ -18,6 +18,12 @@ import Team from "./pages/admin/Team";
 import Settings from "./pages/admin/Settings";
 import Support from "./pages/admin/Support";
 
+// Customer Portal
+import CustomerLogin from "./pages/customer/Login";
+import CustomerSignup from "./pages/customer/Signup";
+import CustomerPortal from "./pages/customer/Portal";
+import OrderTracking from "./pages/customer/OrderTracking";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,6 +35,14 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            
+            {/* Customer Portal */}
+            <Route path="/portal/login" element={<CustomerLogin />} />
+            <Route path="/portal/cadastro" element={<CustomerSignup />} />
+            <Route path="/portal" element={<CustomerPortal />} />
+            <Route path="/portal/pedido/:id" element={<OrderTracking />} />
+            
+            {/* Admin */}
             <Route path="/admin/login" element={<Login />} />
             <Route path="/admin/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
