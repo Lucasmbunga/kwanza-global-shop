@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useCustomerOrder } from '@/hooks/useCustomerOrders';
+import { useOrderReview } from '@/hooks/useReviews';
 import { OrderTimeline } from '@/components/customer/OrderTimeline';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
+import { ReviewForm } from '@/components/customer/ReviewForm';
+import { ReviewDisplay } from '@/components/customer/ReviewDisplay';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -12,7 +15,6 @@ import {
   Package, 
   ArrowLeft, 
   ExternalLink, 
-  MapPin,
   Calendar,
   DollarSign,
   Truck
@@ -24,7 +26,7 @@ export default function OrderTracking() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { order, isLoading, error } = useCustomerOrder(id || '');
-
+  const { review, isLoading: isLoadingReview, isSubmitting, submitReview } = useOrderReview(id || '');
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -118,6 +120,21 @@ export default function OrderTracking() {
                 <OrderTimeline currentStatus={order.status} />
               </CardContent>
             </Card>
+
+            {/* Review Section */}
+            {order.status === 'delivered' && !isLoadingReview && (
+              <div className="mt-6">
+                {review ? (
+                  <ReviewDisplay
+                    rating={review.rating}
+                    comment={review.comment}
+                    createdAt={review.created_at}
+                  />
+                ) : (
+                  <ReviewForm onSubmit={submitReview} isSubmitting={isSubmitting} />
+                )}
+              </div>
+            )}
 
             {/* Product Details */}
             <Card className="mt-6">
