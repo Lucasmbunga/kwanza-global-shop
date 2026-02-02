@@ -17,6 +17,7 @@ import Reports from "./pages/admin/Reports";
 import Team from "./pages/admin/Team";
 import Settings from "./pages/admin/Settings";
 import Support from "./pages/admin/Support";
+import Reviews from "./pages/admin/Reviews";
 
 // Customer Portal
 import CustomerLogin from "./pages/customer/Login";
@@ -53,6 +54,7 @@ const App = () => (
             <Route path="/admin/team" element={<AdminLayout><Team /></AdminLayout>} />
             <Route path="/admin/settings" element={<AdminLayout><Settings /></AdminLayout>} />
             <Route path="/admin/support" element={<AdminLayout><Support /></AdminLayout>} />
+            <Route path="/admin/reviews" element={<AdminLayout><Reviews /></AdminLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
