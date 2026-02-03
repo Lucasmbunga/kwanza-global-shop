@@ -18,6 +18,7 @@ import Team from "./pages/admin/Team";
 import Settings from "./pages/admin/Settings";
 import Support from "./pages/admin/Support";
 import Reviews from "./pages/admin/Reviews";
+import Products from "./pages/admin/Products";
 
 // Customer Portal
 import CustomerLogin from "./pages/customer/Login";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
             <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
             <Route path="/admin/orders/:id" element={<AdminLayout><OrderDetails /></AdminLayout>} />
+            <Route path="/admin/products" element={<AdminLayout><Products /></AdminLayout>} />
             <Route path="/admin/customers" element={<AdminLayout><Customers /></AdminLayout>} />
             <Route path="/admin/reports" element={<AdminLayout><Reports /></AdminLayout>} />
             <Route path="/admin/team" element={<AdminLayout><Team /></AdminLayout>} />

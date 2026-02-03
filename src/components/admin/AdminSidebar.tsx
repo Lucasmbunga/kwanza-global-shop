@@ -23,7 +23,8 @@ import {
   UserPlus,
   BarChart3,
   MessageCircle,
-  Star
+  Star,
+  Package
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -31,6 +32,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const menuItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Pedidos', url: '/admin/orders', icon: ShoppingCart },
+  { title: 'Produtos', url: '/admin/products', icon: Package },
   { title: 'Clientes', url: '/admin/customers', icon: Users },
   { title: 'Suporte', url: '/admin/support', icon: MessageCircle },
   { title: 'Avaliações', url: '/admin/reviews', icon: Star },
