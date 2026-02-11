@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import Index from "./pages/Index";
+import ProductsPage from "./pages/Products";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/admin/Login";
 import ResetPassword from "./pages/admin/ResetPassword";
@@ -37,6 +38,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/produtos" element={<ProductsPage />} />
             
             {/* Customer Portal */}
             <Route path="/portal/login" element={<CustomerLogin />} />
